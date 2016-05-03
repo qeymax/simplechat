@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <label for="username" id="label" >Enter Username :</label>
+    <input type="text" id="username" />
+    <button type="submit" id="confirm" value="Confirm">Confirm</button>
+    <div class="myform">
+        <label for="message" hidden="hidden" id="label2">Message :</label>
+        <input type="text" hidden="hidden" id="message" />
+        <input type="submit" hidden="hidden" id="send" value="Send" />
+    </div>
+    <ul hidden="hidden" id="list"></ul>
+
+
+
+    <script src="Scripts/jquery-2.2.3.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="/signalr/hubs"></script>
+
+    <script>
+        $('#confirm').click(function () {
+            $('#label').hide();
+            $('#username').hide();
+            $('#confirm').hide();
+            $('#label2').show();
+            $('#message').show();
+            $('#send').show();
+            $('#list').show();
+            $('#message').focus();
+        });
+
+        $('#username').keypress(function (e) {
+            if (e.which == 13) {
+                $('#confirm').trigger('click');
+            }
+        });
+
+        $(function () {
+            var messageHub = $.connection.messageHub;
+
+            messageHub.client.helloo = function (username, message) {
+                $('#list').append('<li>' + username + ' : ' + message + '</li>');
+            }
+
+            $.connection.hub.start().done(function () {
+                $('#send').removeAttr('disabled');
+                $('#send').click(function () {
+                    var message = $('#message').val();
+                    messageHub.server.hello($('#username').val(), message);
+                    $('#message').val('');
+                });
+                $('#message').keypress(function (e) {
+                    if (e.which == 13) {
+                        $('#send').trigger('click');
+                    }
+                });
+            });
+
+        });
+
+
+
+    </script>
+
+</body>
+</html>
