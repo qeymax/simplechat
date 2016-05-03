@@ -3,18 +3,31 @@
 <head>
     <title></title>
 	<meta charset="utf-8" />
+    <style>
+        #controls{
+            position:absolute;
+            bottom:20px;
+        }
+        #scroll-list{
+            overflow-y:scroll;
+            max-height:500px;
+        }
+    </style>
 </head>
 <body>
+    <div id="controls">
     <label for="username" id="label" >Enter Username :</label>
     <input type="text" id="username" />
     <button type="submit" id="confirm" value="Confirm">Confirm</button>
-    <div class="myform">
+        <div id="scroll-list">
+            <ul hidden="hidden" id="list"></ul>
+        </div>
         <label for="message" hidden="hidden" id="label2">Message :</label>
         <input type="text" hidden="hidden" id="message" />
         <input type="submit" hidden="hidden" id="send" value="Send" />
-    </div>
-    <ul hidden="hidden" id="list"></ul>
 
+    
+    </div>
 
 
     <script src="Scripts/jquery-2.2.3.min.js"></script>
@@ -44,6 +57,8 @@
 
             messageHub.client.helloo = function (username, message) {
                 $('#list').append('<li>' + username + ' : ' + message + '</li>');
+                var d = $('#scroll-list');
+                d.scrollTop(d.prop("scrollHeight"));
             }
 
             $.connection.hub.start().done(function () {
